@@ -1,14 +1,3 @@
-# require 'bloomfilter-rb'
-
-# bf = BloomFilter::CountingRedis.new(:ttl => 2)
-
-# bf.insert('test')
-# print(bf.include?('test'))     # => true
-
-# sleep(2)
-# print(bf.include?('test'))     # => false
-
-# bf.stats
 require 'redis'
 require 'zlib'
 module BloomFilter
@@ -93,74 +82,75 @@ module BloomFilter
   end
 end
 
-# require 'bloomfilter-rb'
+# =============================================================
 
-class Test
-  def initialize(ttl) 
-      @bf = BloomFilter::CountingRedis.new(:size => 10, :ttl => ttl);
-      print("--INIT BLOOMFILTER OBJ--\n")
+class TrendingFilter
+  def initialize(ttl = 60, seed = 694206942069420) 
+      @server = Redis.new(:timeout => 0)
+      @bf = BloomFilter::CountingRedis.new(:ttl => ttl, :seed => seed, :server => {:timeout => 0});
   end
 
-  def addHashtag(hashtag)
-    @bf.insert(hashtag)
+  def addkeyword(keyword)
+    @server.lpush("bloomlist", keyword)
+    @bf.insert(keyword)
   end
 
-  def addHashtags(lofhashtag)
-    for hashtag in lofhashtag
-      addHashtag(hashtag)
+  def addkeywords(lofkeyword)
+    for keyword in lofkeyword
+      addkeyword(keyword)
     end
   end
 
-  def query(hashtag)
-    @bf.quant?(hashtag)
+  def query(keyword)
+    @bf.quant?(keyword)
   end
 
-  def querymultiple(lofhashtag)
+  def querymultiple(lofkeyword)
     buffer = []
-    for hashtag in lofhashtag
-      buffer.append(@bf.quant?(hashtag))
+    for keyword in lofkeyword
+      buffer.append(@bf.quant?(keyword))
     end
     buffer
   end
 
-  # def include?(hashtag)
-  #   @bf.include?(hashtag)
-  # end
+  def mostrecent
+    result = @server.lrange("bloomlist", 0, 9)
+    Array[result, querymultiple(result)]
+  end
 
   def stats()
     @bf.stats
   end
-
 end
 
-myBf = Test.new(2)
-myBf.addHashtag('cats')
-myBf.addHashtag('cats')
-myBf.addHashtag('dog')
-print("QUERY RETURN: ")
-print(myBf.querymultiple(['cats', 'dog']))
-print(" END\n")
-sleep(1)
-myBf.addHashtag('cats')
-print("QUERY RETURN: ")
-print(myBf.querymultiple(['cats', 'dog']))
-print(" END\n")
-sleep(1)
-print("QUERY RETURN: ")
-print(myBf.querymultiple(['cats', 'dog']))
-print(" END\n")
-myBf.addHashtag('cats')
-sleep(1)
-myBf.addHashtag('cats')
-sleep(1)
-myBf.addHashtag('cats')
-sleep(1)
-print("QUERY RETURN: ")
-print(myBf.querymultiple(['cats', 'dog']))
-print(" END\n")
-sleep(2)
-print("QUERY RETURN: ")
-print(myBf.querymultiple(['cats', 'dog']))
-print(" END\n")
 
-myBf.stats
+# myBf.addkeyword('cats')
+# myBf.addkeyword('cats')
+# myBf.addkeyword('dog')
+# print("QUERY RETURN: ")
+# print(myBf.querymultiple(['cats', 'dog']))
+# print(" END\n")
+# sleep(1)
+# myBf.addkeyword('cats')
+# print("QUERY RETURN: ")
+# print(myBf.querymultiple(['cats', 'dog']))
+# print(" END\n")
+# sleep(1)
+# print("QUERY RETURN: ")
+# print(myBf.querymultiple(['cats', 'dog']))
+# print(" END\n")
+# myBf.addkeyword('cats')
+# sleep(1)
+# myBf.addkeyword('cats')
+# sleep(1)
+# myBf.addkeyword('cats')
+# sleep(1)
+# print("QUERY RETURN: ")
+# print(myBf.querymultiple(['cats', 'dog']))
+# print(" END\n")
+# sleep(2)
+# print("QUERY RETURN: ")
+# print(myBf.querymultiple(['cats', 'dog']))
+# print(" END\n")
+
+# myBf.stats
