@@ -27,7 +27,8 @@ t2 = Thread.new {
     redis2.keys(id01 + "\*").each do |key|
       newkey = id02 + key[id01.length..-1]
       puts("\t\t#{newkey} ")
-      redis2.incr(newkey)
+      incval = Math.log(redis2.get(key).to_i, 10).to_i + 1
+      redis2.incrby(newkey, incval)
       redis2.expire(newkey, ttl)
     end
     puts "\t-- sleeping for #{sleeptime} --"
