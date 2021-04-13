@@ -97,14 +97,17 @@ class TrendingFilter
         :bucket     => 3,
         :ttl        => 180,
         :server     => {:timeout => 0},
-        :listthresh => 3
+        :setthresh => 3,
+        :trendnames => 'bloomset'
       }.merge opts
       @server = Redis.new(@opts[:server])
       @bf = BloomFilter::CountingRedis.new(@opts);
   end
 
   def addkeyword(keyword)
-    @server.lpush("bloomlist", keyword) if query(keyword) >= @opts[:listthresh]
+    if query(keyword) >= @opts[:listthresh]
+      @server.zadd(@opts[:trendnames], Time.now.to_i, keyword)
+    end
     @bf.insert(keyword)
   end
 
@@ -127,7 +130,7 @@ class TrendingFilter
   end
 
   def mostrecent
-    result = @server.lrange("bloomlist", 0, 9)
+    result = @server.zrange(@opts[:trendnames], 0, 9)
     Array[result, querymultiple(result)]
   end
 
