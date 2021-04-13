@@ -85,9 +85,18 @@ end
 # =============================================================
 
 class TrendingFilter
-  def initialize(ttl = 60, seed = 694206942069420) 
-      @server = Redis.new(:timeout => 0)
-      @bf = BloomFilter::CountingRedis.new(:ttl => ttl, :seed => seed, :server => {:timeout => 0});
+  def initialize(opts = {})
+      @opts = {
+        :identifier => 'trendbloom01',
+        :size       => 100,
+        :hashes     => 4,
+        :seed       => 694206942069420,
+        :bucket     => 3,
+        :ttl        => 180,
+        :server     => {:timeout => 0}
+      }.merge opts
+      @server = Redis.new(@opts[:server])
+      @bf = BloomFilter::CountingRedis.new(@opts);
   end
 
   def addkeyword(keyword)

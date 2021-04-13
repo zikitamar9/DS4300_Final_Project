@@ -1,7 +1,7 @@
 require_relative 'bloomttl'
 
 redis = Redis.new(:timeout => 0)
-sixtysecBF = TrendingFilter.new(60)
+sixtysecBF = TrendingFilter.new()
 chan = 'bloom'
 puts "== LISTENING ON \'#{chan}\' =="
 redis.subscribe(chan) do |on|
