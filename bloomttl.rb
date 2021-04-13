@@ -131,35 +131,3 @@ class TrendingFilter
     @bf.stats
   end
 end
-
-
-# myBf.addkeyword('cats')
-# myBf.addkeyword('cats')
-# myBf.addkeyword('dog')
-# print("QUERY RETURN: ")
-# print(myBf.querymultiple(['cats', 'dog']))
-# print(" END\n")
-# sleep(1)
-# myBf.addkeyword('cats')
-# print("QUERY RETURN: ")
-# print(myBf.querymultiple(['cats', 'dog']))
-# print(" END\n")
-# sleep(1)
-# print("QUERY RETURN: ")
-# print(myBf.querymultiple(['cats', 'dog']))
-# print(" END\n")
-# myBf.addkeyword('cats')
-# sleep(1)
-# myBf.addkeyword('cats')
-# sleep(1)
-# myBf.addkeyword('cats')
-# sleep(1)
-# print("QUERY RETURN: ")
-# print(myBf.querymultiple(['cats', 'dog']))
-# print(" END\n")
-# sleep(2)
-# print("QUERY RETURN: ")
-# print(myBf.querymultiple(['cats', 'dog']))
-# print(" END\n")
-
-# myBf.stats
