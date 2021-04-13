@@ -1,5 +1,7 @@
 require 'redis'
 require 'zlib'
+
+# ADAPTED PACKAGE
 module BloomFilter
   class Filter
     def stats
@@ -84,6 +86,7 @@ end
 
 # =============================================================
 
+# NON-PACKAGE ADHOC WRAPPER
 class TrendingFilter
   def initialize(opts = {})
       @opts = {
@@ -93,14 +96,15 @@ class TrendingFilter
         :seed       => 694206942069420,
         :bucket     => 3,
         :ttl        => 180,
-        :server     => {:timeout => 0}
+        :server     => {:timeout => 0},
+        :listthresh => 3
       }.merge opts
       @server = Redis.new(@opts[:server])
       @bf = BloomFilter::CountingRedis.new(@opts);
   end
 
   def addkeyword(keyword)
-    @server.lpush("bloomlist", keyword)
+    @server.lpush("bloomlist", keyword) if query(keyword) >= @opts[:listthresh]
     @bf.insert(keyword)
   end
 
