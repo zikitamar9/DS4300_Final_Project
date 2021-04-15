@@ -105,8 +105,9 @@ class TrendingFilter
   end
 
   def addkeyword(keyword)
-    if query(keyword) >= @opts[:listthresh]
-      @server.zadd(@opts[:trendnames], Time.now.to_i, keyword)
+    qnt = query(keyword)
+    if qnt >= @opts[:setthresh]
+      @server.zadd(@opts[:trendnames], qnt, keyword)
     end
     @bf.insert(keyword)
   end

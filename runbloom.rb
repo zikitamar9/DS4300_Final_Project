@@ -20,6 +20,7 @@ t2 = Thread.new {
   id01 = id + '01:'
   id02 = id + '02:'
   ttl = 900
+  decay = false
   sleeptime = 180
   sleep(5)
   loop do
@@ -27,14 +28,16 @@ t2 = Thread.new {
     redis2.keys(id01 + "\*").each do |key|
       newkey = id02 + key[id01.length..-1]
       puts("\t\t#{newkey} ")
-      # incval = 2
-      incval = Math.log(redis2.get(key).to_i, 10).to_i + 2
+      defalutval = 2 if decay else 1
+      incval = Math.log(redis2.get(key).to_i, 10).to_i + defalutval
       redis2.incrby(newkey, incval)
       redis2.expire(newkey, ttl)
     end
-    redis2.keys(id02 + "\*").each do |key|
-      redis2.decr(key)
-      redis2.del(key) if redis2.get(key) <= "0"
+    if decay
+      redis2.keys(id02 + "\*").each do |key|
+        redis2.decr(key)
+        redis2.del(key) if redis2.get(key) <= "0"
+      end
     end
     puts "\t-- sleeping for #{sleeptime} --"
     sleep(sleeptime)
