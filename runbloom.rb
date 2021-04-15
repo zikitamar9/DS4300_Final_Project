@@ -5,7 +5,7 @@ id = 'trendbloom'
 t1 = Thread.new {
   redis1 = Redis.new(:timeout => 0)
   sixtysecBF = TrendingFilter.new(:identifier => id + '01')
-  chan = 'bloom'
+  chan = 'hashtag_stream'
   puts "== LISTENING ON \'#{chan}\' =="
   redis1.subscribe(chan) do |on|
      on.message do |channel, msg|
@@ -30,7 +30,7 @@ t2 = Thread.new {
       puts("\t\t#{newkey} ")
       defval = 1
       defval = 2 if decay
-      incval = Math.log(redis2.get(key).to_i, 10).to_i + defval
+      incval = defval
       redis2.incrby(newkey, incval)
       redis2.expire(newkey, ttl)
     end

@@ -91,7 +91,7 @@ class TrendingFilter
   def initialize(opts = {})
       @opts = {
         :identifier => 'trendbloom01',
-        :size       => 100,
+        :size       => 1000,
         :hashes     => 4,
         :seed       => 694206942069420,
         :bucket     => 3,
@@ -133,7 +133,7 @@ class TrendingFilter
   end
 
   def mostrecent
-    result = @server.zrange(@opts[:trendnames], 0, 9)
+    result = @server.zrevrange(@opts[:trendnames], 0, 19)
     Array[result, querymultiple(result)]
   end
 

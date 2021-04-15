@@ -36,10 +36,11 @@ end
 
 count = 0
 h_list = []
+rateflag = true
 
 connection = Redis.new
 client.sample do |object|
-  if count < 10000
+  if count < 10000 or rateflag
     if object.is_a?(Twitter::Tweet) && object.hashtags?
       hashtags = object.hashtags
       count = count + 1
@@ -47,6 +48,7 @@ client.sample do |object|
         text = ht.text
         if text.match(/^[\x20-\x7E]*$/)
           h_list.append(ht.text)
+          puts ht.text
           connection.publish 'hashtag_stream', ht.text
         end
       end
@@ -54,6 +56,7 @@ client.sample do |object|
       # print('not a tweet')
       count = count + 1
     end
+    sleep(1.0/24.0)
   else
     client.close
     puts count
