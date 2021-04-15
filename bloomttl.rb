@@ -108,6 +108,8 @@ class TrendingFilter
     qnt = query(keyword)
     if qnt >= @opts[:setthresh]
       @server.zadd(@opts[:trendnames], qnt, keyword)
+    else
+      @server.zrem(@opts[:trendnames], keyword)
     end
     @bf.insert(keyword)
   end

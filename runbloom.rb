@@ -28,8 +28,9 @@ t2 = Thread.new {
     redis2.keys(id01 + "\*").each do |key|
       newkey = id02 + key[id01.length..-1]
       puts("\t\t#{newkey} ")
-      defalutval = 2 if decay else 1
-      incval = Math.log(redis2.get(key).to_i, 10).to_i + defalutval
+      defval = 1
+      defval = 2 if decay
+      incval = Math.log(redis2.get(key).to_i, 10).to_i + defval
       redis2.incrby(newkey, incval)
       redis2.expire(newkey, ttl)
     end
