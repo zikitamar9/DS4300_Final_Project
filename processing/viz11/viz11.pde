@@ -12,10 +12,8 @@ int textmargin = 7;
 void setup(){
     // ...
     size(1620, 780);
+    background(100, 100, 200);
     redis = new Redis(this, "127.0.0.1", 6379);
-    
-    redis.set("key", "value");
-    println(redis.get("key"));
     textSize(20);
     noStroke();
     color c1 = color(255, 255, 255);

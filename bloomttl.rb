@@ -111,6 +111,7 @@ class TrendingFilter
     else
       @server.zrem(@opts[:trendnames], keyword)
     end
+    @server.expire(@opts[:trendnames], 1800)
     @bf.insert(keyword)
   end
 
