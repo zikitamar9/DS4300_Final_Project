@@ -7,7 +7,7 @@ module BloomFilter
     def stats
       fp = ((1.0 - Math.exp(-(@opts[:hashes] * size).to_f / @opts[:size])) ** @opts[:hashes]) * 100
       printf "Number of filter buckets (m): %d\n" % @opts[:size]
-      printf "Number of bits per buckets (b): %d\n" % @opts[:bucket]
+      # printf "Number of bits per buckets (b): %d\n" % @opts[:bucket]
       printf "Number of filter elements (n): %d\n" % size
       printf "Number of filter hashes (k) : %d\n" % @opts[:hashes]
       printf "Raise on overflow? (r) : %s\n" % @opts[:raise].to_s
@@ -23,7 +23,7 @@ module BloomFilter
         :size       => 100,
         :hashes     => 4,
         :seed       => Time.now.to_i,
-        :bucket     => 3,
+        # :bucket     => 3,
         :ttl        => false,
         :server     => {}
       }.merge opts
@@ -91,10 +91,10 @@ class TrendingFilter
   def initialize(opts = {})
       @opts = {
         :identifier => 'trendbloom01',
-        :size       => 1000,
-        :hashes     => 4,
+        :size       => 100000,
+        :hashes     => 6,
         :seed       => 694206942069420,
-        :bucket     => 3,
+        # :bucket     => 3,
         :ttl        => 180,
         :server     => {:timeout => 0},
         :setthresh => 3,
@@ -133,7 +133,7 @@ class TrendingFilter
   end
 
   def mostrecent
-    result = @server.zrevrange(@opts[:trendnames], 0, 19)
+    result = @server.zrevrange(@opts[:trendnames], 0, 29)
     Array[result, querymultiple(result)]
   end
 

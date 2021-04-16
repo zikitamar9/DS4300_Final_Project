@@ -56,7 +56,7 @@ client.sample do |object|
       # print('not a tweet')
       count = count + 1
     end
-    sleep(1.0/24.0)
+    sleep(2.0/24.0)
   else
     client.close
     puts count
