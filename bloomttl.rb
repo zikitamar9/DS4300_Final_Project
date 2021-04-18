@@ -140,7 +140,9 @@ class TrendingFilter
   end
 end
 
-
+# UPDATING METHOD FOR A SECOND BLOOMFILTER THAT 
+# COUNTS FOR THE NUMBER OF INTERVALS THE DATA
+# IS PRESENT
 class SecondOrderFilter
   def initialize(opts = {})
       @opts = {

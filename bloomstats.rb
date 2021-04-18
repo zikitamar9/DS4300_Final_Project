@@ -1,4 +1,5 @@
 require_relative 'bloomttl'
+require 'redis'
 
 id = 'trendbloom'
 

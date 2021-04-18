@@ -1,5 +1,6 @@
 require_relative 'bloomttl'
 require_relative 'tweetgenerator'
+require 'redis'
 
 id = 'trendbloom'
 
