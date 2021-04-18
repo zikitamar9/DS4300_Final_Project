@@ -12,7 +12,8 @@ The purpose of this program is to show the trending hashtags on twitter in real 
 To run our program, execute the Main.rb from a command line window file and the (optionally bloomstats.rb in a different window). If you would like to see a dynamic histogram representing the distribution of hashtags then do the following:
 
 - go to the "processing" folder
-- run viz11.pde
+- click on the folder with your operating system specs (does not support mac)
+- run the viz11.exe file 
 - wait about a minute or two for the bloom filter to start showing trends
 
 __________________________________________________________________________________________
