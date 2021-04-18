@@ -7,7 +7,6 @@ module BloomFilter
     def stats
       fp = ((1.0 - Math.exp(-(@opts[:hashes] * size).to_f / @opts[:size])) ** @opts[:hashes]) * 100
       printf "Number of filter buckets (m): %d\n" % @opts[:size]
-      # printf "Number of bits per buckets (b): %d\n" % @opts[:bucket]
       printf "Number of filter elements (n): %d\n" % size
       printf "Number of filter hashes (k) : %d\n" % @opts[:hashes]
       printf "Raise on overflow? (r) : %s\n" % @opts[:raise].to_s
@@ -23,7 +22,6 @@ module BloomFilter
         :size       => 100,
         :hashes     => 4,
         :seed       => Time.now.to_i,
-        # :bucket     => 3,
         :ttl        => false,
         :server     => {}
       }.merge opts
@@ -94,7 +92,6 @@ class TrendingFilter
         :size       => 100000,
         :hashes     => 6,
         :seed       => 694206942069420,
-        # :bucket     => 3,
         :ttl        => 180,
         :server     => {:timeout => 0},
         :setthresh => 3,
@@ -140,5 +137,47 @@ class TrendingFilter
 
   def stats()
     @bf.stats
+  end
+end
+
+
+class SecondOrderFilter
+  def initialize(opts = {})
+      @opts = {
+        :identifier => 'trendbloom',
+        :server     => {:timeout => 0},
+        :sleeptime => 180,
+        :decay => false,
+        :upperttl => 900
+      }.merge opts
+      @server = Redis.new(@opts[:server])
+      @bf = TrendingFilter.new(
+        @opts.merge({:identifier =>  @opts[:identifier] + "01"}));
+  end
+
+  def update
+    id01 = @opts[:identifier] + '01:'
+    id02 = @opts[:identifier] + '02:'
+    @server.keys(id01 + "\*").each do |key|
+      newkey = id02 + key[id01.length..-1]
+      puts("\t\t#{newkey} ")
+      defval = 1
+      defval = 2 if @opts[:decay]
+      incval = defval
+      @server.incrby(newkey, incval)
+      @server.expire(newkey, @opts[:upperttl])
+    end
+    if @opts[:decay]
+      @server.keys(id02 + "\*").each do |key|
+        @server.decr(key)
+        @server.del(key) if @server.get(key) <= "0"
+      end
+    end
+    puts "\t-- sleeping for #{@opts[:sleeptime]} --"
+    sleep(@opts[:sleeptime])
+  end
+
+  def getFirst
+    return @bf
   end
 end
