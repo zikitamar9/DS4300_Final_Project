@@ -21,23 +21,23 @@ Our program is designed as follows, with four main classes:
 
 TweetGenerator:
 
-this class is to connect to the API and publish all hashtags to a Redis stream. We do this 			by using the .sample method from our Twitter client. Our twitter API token is passed in by default, but a user can change to their own key if they so choose. The .sample method (per the API docs) Returns a small random sample of all public statuses. As we read through a random tweet, we match it with a regex (regular expression) pattern to filter out any non latin characters, such as (こんにちは, مرحبا). We then publish the hashtags to a redis channel that our bloom filter listens on.
+- this class is to connect to the API and publish all hashtags to a Redis stream. We do this 			by using the .sample method from our Twitter client. Our twitter API token is passed in by default, but a user can change to their own key if they so choose. The .sample method (per the API docs) Returns a small random sample of all public statuses. As we read through a random tweet, we match it with a regex (regular expression) pattern to filter out any non latin characters, such as (こんにちは, مرحبا). We then publish the hashtags to a redis channel that our bloom filter listens on.
 
 
-- Filter
-This is a base class method that contains the metrics of our bloom filters
+Filter
+- This is a base class method that contains the metrics of our bloom filters
 
 
-- Counting Redis
-This inherits from filter class to count the number of occurrences
+Counting Redis
+- This inherits from filter class to count the number of occurrences
 
 
-- TrendingFilter
-Takes in a counting redis instance to update the bloom filter
+TrendingFilter
+- Takes in a counting redis instance to update the bloom filter
 
 
-- SecondOrderFilter
-This contains metadata for the bloom filter - counting how long a key has been set.
+SecondOrderFilter
+- This contains metadata for the bloom filter - counting how long a key has been set.
 
 
 
