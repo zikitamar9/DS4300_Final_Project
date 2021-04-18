@@ -16,7 +16,8 @@ To run our program, execute the Main.rb from a command line window file and the 
 - run the viz11.exe file 
 - wait about a minute or two for the bloom filter to start showing trends, it should look like this:
 
-<img width="562" alt="Screen Shot 2021-04-18 at 6 22 39 PM" src="https://user-images.githubusercontent.com/35809264/115162768-51439980-a073-11eb-96d7-e38bae7caa68.png">
+<img width="565" alt="Screen Shot 2021-04-18 at 6 24 58 PM" src="https://user-images.githubusercontent.com/35809264/115162787-6f10fe80-a073-11eb-89e3-d908a5660a82.png">
+
 __________________________________________________________________________________________
 
 Our program is designed as follows, with four main classes:
